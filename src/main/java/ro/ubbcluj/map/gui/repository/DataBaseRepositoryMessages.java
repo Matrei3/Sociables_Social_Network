@@ -31,7 +31,7 @@ public class DataBaseRepositoryMessages implements Repository<Long, Message>{
     public Iterable<Message> findAll() {
         Map<Long,Message> messageMap = new HashMap<>();
         try(Connection connection = DriverManager.getConnection(url,username,password);
-            PreparedStatement statement = connection.prepareStatement("select * from messages");
+            PreparedStatement statement = connection.prepareStatement("select * from messages order by sent_time");
             ResultSet resultSet = statement.executeQuery()
         ){
             while(resultSet.next()){
@@ -40,6 +40,7 @@ public class DataBaseRepositoryMessages implements Repository<Long, Message>{
                 Long from = resultSet.getLong("from_user");
                 LocalDateTime sentTime = resultSet.getTimestamp("sent_time").toLocalDateTime();
                 Long replyId = resultSet.getLong("reply");
+
                 String text = resultSet.getString("text");
                 Message message = new Message(from,to,text,sentTime,replyId);
                 message.setId(id);
@@ -60,7 +61,10 @@ public class DataBaseRepositoryMessages implements Repository<Long, Message>{
             statementAdd.setLong(2,entity.getTo());
             statementAdd.setString(3,entity.getText());
             statementAdd.setDate(4,java.sql.Date.valueOf(entity.getSentTime().toLocalDate()));
-            statementAdd.setLong(5,entity.getReply());
+            if(entity.getReply()!=null)
+                statementAdd.setLong(5,entity.getReply());
+            else
+                statementAdd.setNull(5, Types.NULL);
             if(statementAdd.executeUpdate()<1)
                 return Optional.of(entity);
             {

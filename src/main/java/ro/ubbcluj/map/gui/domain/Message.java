@@ -4,10 +4,23 @@ import java.time.LocalDateTime;
 
 public class Message extends Entity<Long> {
     private Long from;
+    private String usernameSender;
+    public void setUsernameSender(String usernameSender) {
+        this.usernameSender = usernameSender;
+    }
+
+    @Override
+    public String toString() {
+        if(reply!=0)
+            return "(" + id + ") " +usernameSender + ": (reply to " + reply + ')' + text;
+        return  "(" + id + ") " + usernameSender + ": " +
+                text;
+    }
+
     private Long to;
     private String text;
     private LocalDateTime sentTime;
-    private Long reply=null;
+    private Long reply;
     public Message(Long from, Long to, String text, LocalDateTime sentTime, Long reply) {
 
         this.from = from;
@@ -16,6 +29,14 @@ public class Message extends Entity<Long> {
         this.text = text;
         this.reply = reply;
     }
+    public Message(Long from, Long to, String text, LocalDateTime sentTime) {
+
+        this.from = from;
+        this.to = to;
+        this.sentTime = sentTime;
+        this.text = text;
+    }
+
     public String getText() {
         return text;
     }

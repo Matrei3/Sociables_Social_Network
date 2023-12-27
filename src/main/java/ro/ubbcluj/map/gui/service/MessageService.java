@@ -29,6 +29,8 @@ public class MessageService implements Observable<MessageChangeEvent> {
     }
 
     public Message addMessage(Long idUser1, Long idUser2, String text, LocalDateTime sentTime,Long reply){
+        if(reply==null)
+            reply = 0L;
         Message newMessage = new Message(idUser1,idUser2,text,sentTime,reply);
         try{
             messageValidator.validate(newMessage);
