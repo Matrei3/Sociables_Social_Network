@@ -30,8 +30,7 @@ public class SendBulkMessagesController {
             MessageAlert.showErrorMessage(null,"Message must have a length");
             return;
         }
-        idsToSendMessagesTo.forEach(id -> {
-            messageService.addMessage(senderId,id,text,LocalDateTime.now(),null);
-        });
+        messageService.addMessage(senderId,idsToSendMessagesTo,text,LocalDateTime.now(),null);
+
     }
 }

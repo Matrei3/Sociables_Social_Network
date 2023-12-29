@@ -5,6 +5,9 @@
     <file url="file://$PROJECT_DIR$/src/main/java/ro/ubbcluj/map/gui/repository/DataBaseRepositoryMessages.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/ro/ubbcluj/map/gui/repository/DataBaseRepositoryPendingRequests.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/ro/ubbcluj/map/gui/repository/DataBaseRepositoryUsers.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ro/ubbcluj/map/gui/repository/paging/MessagesDBPagingRepository.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/ro/ubbcluj/map/gui/repository/paging/PendingRequestDBPagingRepository.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/ro/ubbcluj/map/gui/repository/paging/UserDBPagingRepository.java" dialect="GenericSQL" />
+    <file url="PROJECT" dialect="GenericSQL" />
   </component>
 </project>

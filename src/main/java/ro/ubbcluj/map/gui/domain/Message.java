@@ -1,6 +1,7 @@
 package ro.ubbcluj.map.gui.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Message extends Entity<Long> {
     private Long from;
@@ -17,11 +18,11 @@ public class Message extends Entity<Long> {
                 text;
     }
 
-    private Long to;
+    private List<Long> to;
     private String text;
     private LocalDateTime sentTime;
     private Long reply;
-    public Message(Long from, Long to, String text, LocalDateTime sentTime, Long reply) {
+    public Message(Long from, List<Long> to, String text, LocalDateTime sentTime, Long reply) {
 
         this.from = from;
         this.to = to;
@@ -29,7 +30,7 @@ public class Message extends Entity<Long> {
         this.text = text;
         this.reply = reply;
     }
-    public Message(Long from, Long to, String text, LocalDateTime sentTime) {
+    public Message(Long from, List<Long> to, String text, LocalDateTime sentTime) {
 
         this.from = from;
         this.to = to;
@@ -45,16 +46,6 @@ public class Message extends Entity<Long> {
         this.text = text;
     }
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getFrom() {
         return from;
     }
@@ -63,11 +54,11 @@ public class Message extends Entity<Long> {
         this.from = from;
     }
 
-    public Long getTo() {
+    public List<Long> getTo() {
         return to;
     }
 
-    public void setTo(Long to) {
+    public void setTo(List<Long> to) {
         this.to = to;
     }
 

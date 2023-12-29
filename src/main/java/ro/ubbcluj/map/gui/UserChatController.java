@@ -7,15 +7,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import ro.ubbcluj.map.gui.domain.Message;
+import ro.ubbcluj.map.gui.domain.Tuple;
 import ro.ubbcluj.map.gui.domain.User;
+import ro.ubbcluj.map.gui.repository.paging.PageableImplementation;
 import ro.ubbcluj.map.gui.service.MessageService;
 import ro.ubbcluj.map.gui.utils.events.MessageChangeEvent;
 import ro.ubbcluj.map.gui.utils.events.PendingRequestChangeEvent;
 import ro.ubbcluj.map.gui.utils.observer.Observer;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -28,16 +29,21 @@ public class UserChatController implements Observer<MessageChangeEvent> {
     private MessageService messageService;
     private User user;
     private User friend;
+    private int pageSize = 5;
     public void handleSend(ActionEvent actionEvent) {
         if(listViewMessages.getSelectionModel().getSelectedItem()==null) {
             String text = textFieldMessage.getText();
-            messageService.addMessage(user.getId(), friend.getId(), text, LocalDateTime.now(), null);
+            pageSize++;
+            messageService.addMessage(user.getId(), List.of(friend.getId()), text, LocalDateTime.now(), null);
+
             textFieldMessage.clear();
         }
         else{
             Message selectedMessage = listViewMessages.getSelectionModel().getSelectedItem();
             String text = textFieldMessage.getText();
-            messageService.addMessage(user.getId(), friend.getId(), text, LocalDateTime.now(), selectedMessage.getId());
+            pageSize++;
+            messageService.addMessage(user.getId(), List.of(friend.getId()), text, LocalDateTime.now(), selectedMessage.getId());
+
             textFieldMessage.clear();
         }
         listViewMessages.getSelectionModel().clearSelection();
@@ -55,15 +61,15 @@ public class UserChatController implements Observer<MessageChangeEvent> {
     }
 
     private void initModel() {
-        Iterable<Message> messages = messageService.findAll();
-        List<Message> filteredMessages = StreamSupport.stream(messages.spliterator(),false)
-                .filter(message -> (message.getFrom().equals(user.getId()) && message.getTo().equals(friend.getId())) || message.getFrom().equals(friend.getId()) && message.getTo().equals(user.getId()))
-                .toList();
-        System.out.println(filteredMessages);
-        for(Message message : filteredMessages){
-                message.setUsernameSender(user.getId().equals(message.getFrom()) ? user.getUsername() : friend.getUsername());
+        List<Message> messages = new ArrayList<>(messageService.findAllMessagesForTwoUsers(new Tuple<>(user.getId(), friend.getId()), new PageableImplementation(1, pageSize)).getContent().toList());
+        Collections.reverse(messages);
+        for(Message message : messages){
+            if(Objects.equals(message.getFrom(), friend.getId()))
+                message.setUsernameSender(friend.getUsername());
+            else
+                message.setUsernameSender(user.getUsername());
         }
-        modelMessages.setAll(filteredMessages);
+        modelMessages.setAll(messages);
         listViewMessages.setItems(modelMessages);
     }
     @Override

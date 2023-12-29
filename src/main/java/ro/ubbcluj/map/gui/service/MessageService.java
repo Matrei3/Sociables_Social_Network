@@ -1,10 +1,14 @@
 package ro.ubbcluj.map.gui.service;
 
 import ro.ubbcluj.map.gui.domain.Message;
+import ro.ubbcluj.map.gui.domain.Tuple;
 import ro.ubbcluj.map.gui.domain.User;
 import ro.ubbcluj.map.gui.domain.validators.MessageException;
 import ro.ubbcluj.map.gui.domain.validators.MessageValidator;
 import ro.ubbcluj.map.gui.repository.Repository;
+import ro.ubbcluj.map.gui.repository.paging.Page;
+import ro.ubbcluj.map.gui.repository.paging.Pageable;
+import ro.ubbcluj.map.gui.repository.paging.PagingRepository;
 import ro.ubbcluj.map.gui.utils.events.ChangeEventType;
 import ro.ubbcluj.map.gui.utils.events.MessageChangeEvent;
 import ro.ubbcluj.map.gui.utils.observer.Observable;
@@ -17,18 +21,16 @@ import java.util.Optional;
 
 public class MessageService implements Observable<MessageChangeEvent> {
 
-    private final Repository<Long, User> userRepository;
-    private final Repository<Long,Message> messageRepository;
+    private final PagingRepository<Long,Message,Tuple<Long,Long>> messageRepository;
 
     private final MessageValidator messageValidator;
 
-    public MessageService(Repository<Long, User> userRepository, Repository<Long, Message> messageRepository, MessageValidator messageValidator) {
-        this.userRepository = userRepository;
+    public MessageService(PagingRepository<Long, Message,Tuple<Long,Long>> messageRepository, MessageValidator messageValidator) {
         this.messageRepository = messageRepository;
         this.messageValidator = messageValidator;
     }
 
-    public Message addMessage(Long idUser1, Long idUser2, String text, LocalDateTime sentTime,Long reply){
+    public Message addMessage(Long idUser1, List<Long> idUser2, String text, LocalDateTime sentTime,Long reply){
         if(reply==null)
             reply = 0L;
         Message newMessage = new Message(idUser1,idUser2,text,sentTime,reply);
@@ -49,6 +51,9 @@ public class MessageService implements Observable<MessageChangeEvent> {
     }
     public Iterable<Message> findAll(){
         return messageRepository.findAll();
+    }
+    public Page<Message> findAllMessagesForTwoUsers(Tuple<Long,Long> id_users, Pageable pageable){
+        return messageRepository.findAllPaged(id_users,pageable);
     }
     private final List<Observer<MessageChangeEvent>> observers = new ArrayList<>();
 
