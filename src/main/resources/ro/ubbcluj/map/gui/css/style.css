@@ -1,0 +1,26 @@
+.button {
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-background-color: linear-gradient(#096d79, #00d4ff);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#020024,#891cd4);
+}
+
+.label {
+    -fx-font-size: 14px;
+    /*-fx-font-weight:bold;*/
+    -fx-text-fill: #0fa8ed;
+    -fx-effect: dropshadow( gaussian , rgba(214, 66, 20, 0.5), 0,0,0,1 );
+}
+.table-row-cell:selected {
+    -fx-background-color:#1cb1f5 ;
+
+}
+.table-row-cell:selected .text {
+    -fx-fill: #ffffff;
+}
